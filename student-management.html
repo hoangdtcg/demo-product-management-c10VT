@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Management</title>
+    <script src="data.js"></script>
+</head>
+<style>
+    form {
+        display: inline-block;
+        width: 200px;
+        margin-bottom: 20px;
+    }
+
+    input {
+        width: 150px;
+        margin-bottom: 10px;
+    }
+</style>
+<body>
+<form>
+    <fieldset>
+        <legend>Add Student</legend>
+        <input type="text" id="student-name" placeholder="Student Name">
+        <input type="date" id="student-dob" placeholder="Birthday">
+        <input type="text" id="student-address" placeholder="Address">
+        <input type="number" id="student-phone" placeholder="Number Phone">
+        <button type="button" onclick="createStudent()">Add</button>
+    </fieldset>
+</form>
+
+<form>
+    <fieldset>
+        <legend>Update Student</legend>
+        <input type="text" id="update-name" placeholder="Student Name">
+        <input type="date" id="update-dob" placeholder="Birthday">
+        <input type="text" id="update-address" placeholder="Address">
+        <input type="number" id="update-phone" placeholder="Number Phone">
+        <button type="reset" onclick="updateStudent()">Update</button>
+    </fieldset>
+</form>
+
+<table border="1px" id="list-student">
+</table>
+<script>
+
+
+    //*Tên function là động từ, tên variable, array là danh từ hoặc tính từ
+    //CRUD - Thêm sửa xóa
+    //Làm giao diện
+
+    //Mảng chứa các học sinh
+    // let students = ["An","Ngan","Thuong","Khoi","Minh","Thinh"];
+    let students = loadData();
+    let current = -1;
+
+    //Thêm học sinh
+    function createStudent() {
+        let nameInput = document.getElementById('student-name');
+        let dobInput = document.getElementById('student-dob');
+        let addressInput = document.getElementById('student-address');
+        let phoneInput = document.getElementById('student-phone');
+        if(nameInput.value=='' || dobInput.value=='' || addressInput.value=='' || phoneInput.value ==''){
+            alert("Vui long nhap du thong tin");
+        }else{
+            let student = [nameInput.value,dobInput.value,addressInput.value,phoneInput.value];
+            students.push(student);
+            clearInput();
+            display();
+        }
+
+    }
+
+    function editStudent(index) {
+        document.getElementById('update-name').value = students[index][0];
+        document.getElementById('update-dob').value = students[index][1];
+        document.getElementById('update-address').value = students[index][2];
+        document.getElementById('update-phone').value = students[index][3];
+        current = index;
+    }
+    //Sửa học sinh
+    function updateStudent() {
+        students[current][0] = document.getElementById('update-name').value;
+        students[current][1] = document.getElementById('update-dob').value;
+        students[current][2] = document.getElementById('update-address').value;
+        students[current][3] = document.getElementById('update-phone').value;
+        display();
+    }
+
+    //Đuổi học sinh
+    function deleteStudent(index) {
+        let cf = confirm(`Ban co chac chan muon xoa hoc vien ${students[index][0]} khong?`);
+        if (cf) {
+            students.splice(index,1);
+            display();
+        }
+
+    }
+
+    //Xem thông tin 1 học sinh
+    function showStudentDetail(index) {
+
+    }
+    //Hiển thị list học sinh
+    function display() {
+        let list = document.getElementById('list-student');
+        let str = `<tr>
+                        <th>Name</th>
+                        <th>Birthday</th>
+                        <th>Address</th>
+                        <th>Phone</th>
+                        <th colspan="2">Action</th>
+                   </tr>`;
+        for(let id in students){
+            str+=`<tr>
+                    <td>${students[id][0]}</td>
+                    <td>${students[id][1]}</td>
+                    <td>${students[id][2]}</td>
+                    <td>${students[id][3]}</td>
+                    <td><button onclick="editStudent(${id})">Edit</button></td>
+                    <td><button onclick="deleteStudent(${id})">Delete</button></td>
+                  </tr>`;
+        }
+        list.innerHTML = str;
+        saveData(students);
+    }
+
+    function clearInput() {
+        document.getElementById('student-name').value = '';
+        document.getElementById('student-dob').value = '';
+        document.getElementById('student-address').value = '';
+        document.getElementById('student-phone').value = '';
+    }
+
+    display();
+</script>
+</body>
+</html>
